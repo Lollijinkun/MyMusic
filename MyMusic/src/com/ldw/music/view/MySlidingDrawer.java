@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.view;
 
 import android.content.Context;
@@ -13,6 +10,11 @@ import android.widget.SlidingDrawer;
 import com.ldw.music.interfaces.IOnSlidingHandleViewClickListener;
 
 public class MySlidingDrawer extends SlidingDrawer{
+	/**
+	 * SlidingDrawer 隐藏屏外的内容，并允许用户通过handle以显示隐藏内容。
+	 * 它可以垂直或水平滑动，它有俩个View组成，其一是可以拖动的handle,其二是隐藏内容的View.
+	 * 它里面的控件必须设置布局，在布局文件中必须指定handle和content.
+	 */
     private int mHandleId = 0;              	 //抽屉行为控件ID
     private int[] mTouchableIds = null;    		//Handle 部分其他控件ID
     
@@ -40,7 +42,7 @@ public class MySlidingDrawer extends SlidingDrawer{
     {
     	mTouchViewClickListener = listener;
     }
-
+    
     public MySlidingDrawer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -66,7 +68,10 @@ public class MySlidingDrawer extends SlidingDrawer{
         return rect;
     }
     
-
+    /**
+     * 通过该方法可以控制接收事件的对象view
+     * ViewGroup 提供的方法，默认返回false，返回true表示拦截
+     */
     public boolean onInterceptTouchEvent(MotionEvent event) {
     	 // 触摸位置转换为屏幕坐标
         int[] location = new int[2];
@@ -76,8 +81,6 @@ public class MySlidingDrawer extends SlidingDrawer{
         x += location[0];
         y += location[1];
    
- 
-        
         if(mTouchableIds != null){
             for(int id : mTouchableIds){
                 View view = findViewById(id);     
@@ -99,7 +102,6 @@ public class MySlidingDrawer extends SlidingDrawer{
             }
         }
        
-        
          //抽屉行为控件
         if(event.getAction() == MotionEvent.ACTION_DOWN && mHandleId != 0){
             View view = findViewById(mHandleId);

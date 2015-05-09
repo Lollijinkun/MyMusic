@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ldw.music"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    
+    <!--android:screenOrientation 设置安卓程序横竖屏切换属性 
+    	"unspecified" 默認值. 由系統選擇顯示方向. 在不同的設備可能會有所不同.
+    	"landscape" 橫向
+		"portrait"  縱向
+		"user"    用戶當前的首選方向
+
+"behind"
+- 與在活動堆棧下的活動相同方向
+
+"sensor"
+- 根據物理方向傳感器確定方向. 取決於用戶手持的方向, 當用戶轉動設備, 它跟隨改變.
+
+"nosensor"
+- 不經物理方向傳感器確定方向. 該傳感器被忽略, 所以當用戶轉動設備, 顯示不會跟隨改變. 除了這個區別，系統選擇使用相同的政策取向對於“未指定”設置. 系統根據“未指定”("unspecified")設定選擇相同顯示方向.
+    -->
+    
+    <application
+        android:name=".MusicApp"
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".activity.MainContentActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <!-- <activity android:name=".activity.MainContentActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+            
+        </activity> -->
+        <activity android:name=".activity.MenuBackgroundActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        <activity android:name=".activity.MenuScanActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        <activity android:name=".activity.MenuSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        <activity
+            android:name=".activity.PlayQueueActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" >
+        </activity>
+        
+        <activity android:name=".activity.MusicListSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+
+        <service android:name=".service.MediaService" >
+            <intent-filter>
+                <action android:name="com.ldw.music.service.MediaService" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

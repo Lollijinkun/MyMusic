@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.db;
 
 import android.content.Context;
@@ -8,6 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * 数据库的初始化类，创建数据表以及获取数据库SqLiteDatabase对象
+ * @author 慎之
+ *
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static SQLiteDatabase mDb;
@@ -19,7 +21,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String TABLE_MUSIC = "music_info";
 	private static final String TABLE_FOLDER = "folder_info";
 	private static final String TABLE_FAVORITE = "favorite_info";
-
+	
+	/**
+	 * 根据Context对象获取SQLiteDatabase对象
+	 * @param context
+	 * @return
+	 */
 	public static SQLiteDatabase getInstance(Context context) {
 		if (mDb == null) {
 			mDb = getHelper(context).getWritableDatabase();
@@ -27,6 +34,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return mDb;
 	}
 	
+	/**
+	 * 根据Context对象获取DatabaseHelper对象
+	 * @param context
+	 * @return
+	 */
 	public static DatabaseHelper getHelper(Context context) {
 		if(mHelper == null) {
 			mHelper = new DatabaseHelper(context);
@@ -42,7 +54,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			int version) {
 		super(context, name, factory, version);
 	}
-
+	
+	/**
+	 * 对象创建后自动新建TABLE_MUSIC，TABLE_ALBUM，TABLE_ARTIST，TABLE_FOLDER，TABLE_FAVORITE数据表
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("create table "
@@ -66,7 +81,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ " songid integer, albumid integer, duration integer, musicname varchar(10), "
 				+ "artist char, data char, folder char, musicnamekey char, artistkey char, favorite integer)");
 	}
-
+	
+	/**
+	 * 数据库升级时的操作
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (newVersion > oldVersion) {
@@ -78,6 +96,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	/**
+	 * 删除数据库中现有的表
+	 * @param context
+	 */
 	public void deleteTables(Context context) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_ALBUM, null, null);

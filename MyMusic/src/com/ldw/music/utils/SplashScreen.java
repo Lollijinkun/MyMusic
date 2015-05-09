@@ -40,6 +40,7 @@ public class SplashScreen {
         Runnable runnable = new Runnable() {
             public void run() {
                 // Get reference to display
+            	//DisplayMetrics类提供了一种关于显示的通用信息，如显示大小，分辨率和字体
             	DisplayMetrics metrics = new DisplayMetrics();
 //                Display display = activity.getWindowManager().getDefaultDisplay();
 
@@ -63,6 +64,7 @@ public class SplashScreen {
                 }
                 
                 Window window = splashDialog.getWindow();
+                //设置window的动画方式
                 switch(animation){
                     case SLIDE_LEFT:
                         window.setWindowAnimations(R.style.dialog_anim_slide_left);

@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.adapter;
 
 import java.util.ArrayList;
@@ -18,6 +15,11 @@ import android.widget.TextView;
 import com.ldw.music.R;
 import com.ldw.music.model.LyricSentence;
 
+/**
+ * LyricAdapter 控制歌词的UI显示
+ * @author 慎之
+ *
+ */
 public class LyricAdapter extends BaseAdapter {
 	private static final String TAG = LyricAdapter.class.getSimpleName();
 
@@ -89,18 +91,15 @@ public class LyricAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			LayoutInflater inflater = (LayoutInflater) mContext
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.lyric_line, null);
-			holder.lyric_line = (TextView) convertView
-					.findViewById(R.id.lyric_line_text);
+			holder.lyric_line = (TextView) convertView.findViewById(R.id.lyric_line_text);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		if (position >= 0 && position < mLyricSentences.size()) {
-			holder.lyric_line.setText(mLyricSentences.get(position)
-					.getContentText());
+			holder.lyric_line.setText(mLyricSentences.get(position).getContentText());
 		}
 		if (mIndexOfCurrentSentence == position) {
 			// 当前播放到的句子设置为白色，字体大小更大
@@ -108,8 +107,7 @@ public class LyricAdapter extends BaseAdapter {
 			holder.lyric_line.setTextSize(mCurrentSize);
 		} else {
 			// 其他的句子设置为暗色，字体大小较小
-			holder.lyric_line.setTextColor(mContext.getResources().getColor(
-					R.color.trans_white));
+			holder.lyric_line.setTextColor(mContext.getResources().getColor(R.color.trans_white));
 			holder.lyric_line.setTextSize(mNotCurrentSize);
 		}
 		return convertView;

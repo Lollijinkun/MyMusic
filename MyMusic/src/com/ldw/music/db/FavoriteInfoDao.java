@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.db;
 
 import java.util.ArrayList;
@@ -14,6 +11,11 @@ import android.database.sqlite.SQLiteDatabase;
 import com.ldw.music.activity.IConstants;
 import com.ldw.music.model.MusicInfo;
 
+/**
+ * 数据表 FavoriteInfo的操作类
+ * @author 慎之
+ *
+ */
 public class FavoriteInfoDao implements IConstants {
 
 	private static final String TABLE_FAVORITE = "favorite_info";
@@ -24,7 +26,7 @@ public class FavoriteInfoDao implements IConstants {
 	}
 
 	/**
-	 * 将收藏过的音乐保存起来
+	 * 将收藏过的音乐保存到数据库
 	 * @param music
 	 */
 	public void saveMusicInfo(MusicInfo music) {
@@ -44,18 +46,30 @@ public class FavoriteInfoDao implements IConstants {
 		db.insert(TABLE_FAVORITE, null, cv);
 	}
 	
+	/**
+	 * 根据ID删除数据库中的记录
+	 * @param _id
+	 */
 	public void deleteById(int _id) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		db.delete(TABLE_FAVORITE, "_id=?", new String[]{ _id+"" });
 	}
-
+	
+	/**
+	 * 获取数据表中的数据并封装进MusicInfo集合
+	 * @return
+	 */
 	public List<MusicInfo> getMusicInfo() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "select * from " + TABLE_FAVORITE;
-
 		return parseCursor(db.rawQuery(sql, null));
 	}
-
+	
+	/**
+	 * 读取Cusor对象中的数据并封装进MusicInfo结合
+	 * @param cursor
+	 * @return
+	 */
 	private List<MusicInfo> parseCursor(Cursor cursor) {
 		List<MusicInfo> list = new ArrayList<MusicInfo>();
 		while (cursor.moveToNext()) {
@@ -64,15 +78,12 @@ public class FavoriteInfoDao implements IConstants {
 			music.songId = cursor.getInt(cursor.getColumnIndex("songid"));
 			music.albumId = cursor.getInt(cursor.getColumnIndex("albumid"));
 			music.duration = cursor.getInt(cursor.getColumnIndex("duration"));
-			music.musicName = cursor.getString(cursor
-					.getColumnIndex("musicname"));
+			music.musicName = cursor.getString(cursor.getColumnIndex("musicname"));
 			music.artist = cursor.getString(cursor.getColumnIndex("artist"));
 			music.data = cursor.getString(cursor.getColumnIndex("data"));
 			music.folder = cursor.getString(cursor.getColumnIndex("folder"));
-			music.musicNameKey = cursor.getString(cursor
-					.getColumnIndex("musicnamekey"));
-			music.artistKey = cursor.getString(cursor
-					.getColumnIndex("artistkey"));
+			music.musicNameKey = cursor.getString(cursor.getColumnIndex("musicnamekey"));
+			music.artistKey = cursor.getString(cursor.getColumnIndex("artistkey"));
 			music.favorite = cursor.getInt(cursor.getColumnIndex("favorite"));
 			list.add(music);
 		}
@@ -95,8 +106,7 @@ public class FavoriteInfoDao implements IConstants {
 	// }
 
 	/**
-	 * 数据库中是否有数据
-	 * 
+	 * 检测数据表中是否有数据
 	 * @return
 	 */
 	public boolean hasData() {
@@ -114,6 +124,10 @@ public class FavoriteInfoDao implements IConstants {
 		return has;
 	}
 	
+	/**
+	 * 获取数据表中的数据条数
+	 * @return
+	 */
 	public int getDataCount() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "select count(*) from " + TABLE_FAVORITE;

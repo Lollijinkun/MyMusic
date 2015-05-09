@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.activity;
 
 import java.util.ArrayList;
@@ -34,7 +31,7 @@ import com.ldw.music.utils.MusicUtils;
 
 /**
  * 播放队列
- * @author longdw(longdawei1988@gmail.com)
+ * @author 慎之
  *
  */
 public class PlayQueueActivity extends Activity implements OnItemClickListener, IConstants {
@@ -67,6 +64,9 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		initConnection();
 	}
 	
+	/**
+	 * 初始化连接
+	 */
 	private void initConnection() {
 		mServiceConnection = new ServiceConnection() {
 			
@@ -97,7 +97,10 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		Intent intent = new Intent("com.ldw.music.service.MediaService");
 		bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 	}
-
+	
+	/**
+	 * 加载界面
+	 */
 	private void initView() {
 		mListView = (ListView) findViewById(R.id.listview_play_queue);
 		mTitleTv = (TextView) findViewById(R.id.title_tv);
@@ -119,6 +122,9 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		});
 	}
 	
+	/**
+	 * 改变播放模式
+	 */
 	private void changeMode() {
 		mCurMode++;
 		if (mCurMode > MPM_SINGLE_LOOP_PLAY) {
@@ -126,7 +132,10 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		}
 		mPlayModeIv.setBackgroundResource(modeDrawable[mCurMode]);
 	}
-
+	
+	/**
+	 * 初始化播放列表
+	 */
 	private void initListView() {
 		if(mMusicList.size() == 0) {
 			mTitleTv.setText("播放队列(0)");
@@ -143,7 +152,10 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		mListView.setAdapter(adapter);
 		mListView.setSelection(mPlayingSongPosition);
 	}
-
+	
+	/**
+	 * 设置本Activity在父窗口的位置
+	 */
 	@Override
 	public void onAttachedToWindow() {
 		// 设置本Activity在父窗口的位置
@@ -152,17 +164,16 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		WindowManager.LayoutParams lp = (WindowManager.LayoutParams) view
 				.getLayoutParams();
 		lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
-		lp.x = getResources().getDimensionPixelSize(
-				R.dimen.playqueue_dialog_marginright);
-		lp.y = getResources().getDimensionPixelSize(
-				R.dimen.playqueue_dialog_marginbottom);
-		lp.width = getResources().getDimensionPixelSize(
-				R.dimen.playqueue_dialog_width);
-		lp.height = getResources().getDimensionPixelSize(
-				R.dimen.playqueue_dialog_height);
+		lp.x = getResources().getDimensionPixelSize(R.dimen.playqueue_dialog_marginright);
+		lp.y = getResources().getDimensionPixelSize(R.dimen.playqueue_dialog_marginbottom);
+		lp.width = getResources().getDimensionPixelSize(R.dimen.playqueue_dialog_width);
+		lp.height = getResources().getDimensionPixelSize(R.dimen.playqueue_dialog_height);
 		getWindowManager().updateViewLayout(view, lp);
 	}
 	
+	/**
+	 * 停止操作
+	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -170,6 +181,11 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		mMusicList = null;
 	}
 	
+	/**
+	 * 获取ListView对象中新的item
+	 * @author 慎之
+	 *
+	 */
 	private class MyAdapter extends ArrayAdapter<String> {
 
 		public MyAdapter(Context context, int textViewResourceId,
@@ -179,19 +195,20 @@ public class PlayQueueActivity extends Activity implements OnItemClickListener, 
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView tv = (TextView) super.getView(position, convertView,
-					parent);
+			TextView tv = (TextView) super.getView(position, convertView,parent);
 			if (position == mPlayingSongPosition) {
 				// 对正在播放的歌曲设置高亮
-				tv.setTextColor(getResources().getColor(
-						R.color.holo_orange_dark));
+				tv.setTextColor(getResources().getColor(R.color.holo_orange_dark));
 			} else {
 				tv.setTextColor(getResources().getColor(R.color.black));
 			}
 			return tv;
 		}
 	}
-
+	
+	/**
+	 * 添加item的点击事件
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {

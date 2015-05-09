@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.storage;
 
 import com.ldw.music.activity.IConstants;
@@ -10,15 +7,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+/**
+ * 保存程序一些常用的配置信息
+ * @author 慎之
+ *
+ */
 @SuppressLint({ "WorldWriteableFiles", "CommitPrefEdits" })
 public class SPStorage implements IConstants {
-	
+	/**
+	 * SharedPreferences是Android中最容易理解的数据存储技术，实际上SharedPreferences处理的就是一个key-value（键值对）
+	 * SharedPreferences常用来存储一些轻量级的数据
+	 */
 	private SharedPreferences mSp;
 	private Editor mEditor;
 	
 	public SPStorage(Context context) {
-		mSp = context.getSharedPreferences(SP_NAME,
-				Context.MODE_WORLD_WRITEABLE);
+		mSp = context.getSharedPreferences(SP_NAME, Context.MODE_WORLD_WRITEABLE);
 		mEditor = mSp.edit();
 	}
 	
@@ -38,38 +42,70 @@ public class SPStorage implements IConstants {
 		return mSp.getString(SP_BG_PATH, null);
 	}
 	
+	/**
+	 * 设置摇一摇换歌功能的属性值（true， false）
+	 * @param shake
+	 */
 	public void saveShake(boolean shake) {
 		mEditor.putBoolean(SP_SHAKE_CHANGE_SONG, shake);
 		mEditor.commit();
 	}
 	
+	/**
+	 * 获取摇一摇换歌功能的属性值（true， false）
+	 * @return
+	 */
 	public boolean getShake() {
 		return mSp.getBoolean(SP_SHAKE_CHANGE_SONG, false);
 	}
 	
+	/**
+	 * 设置是否自动下载歌词的属性（true， false）
+	 * @param auto
+	 */
 	public void saveAutoLyric(boolean auto) {
 		mEditor.putBoolean(SP_AUTO_DOWNLOAD_LYRIC, auto);
 		mEditor.commit();
 	}
 	
+	/**
+	 * 获取是否自动下载歌词的属性（true， false）
+	 * @return
+	 */
 	public boolean getAutoLyric() {
 		return mSp.getBoolean(SP_AUTO_DOWNLOAD_LYRIC, false);
 	}
 	
+	/**
+	 * 设置是否过滤文件的容量大小的属性（true， false）
+	 * @param size
+	 */
 	public void saveFilterSize(boolean size) {
 		mEditor.putBoolean(SP_FILTER_SIZE, size);
 		mEditor.commit();
 	}
 	
+	/**
+	 * 获取是否过滤文件的容量大小的属性（true， false）
+	 * @return
+	 */
 	public boolean getFilterSize() {
 		return mSp.getBoolean(SP_FILTER_SIZE, false);
 	}
 	
+	/**
+	 * 设置过滤音频文件时间长度的属性（true， false）
+	 * @param time
+	 */
 	public void saveFilterTime(boolean time) {
 		mEditor.putBoolean(SP_FILTER_TIME, time);
 		mEditor.commit();
 	}
 	
+	/**
+	 * 获取过滤音频文件时间长度的属性（true， false）
+	 * @return
+	 */
 	public boolean getFilterTime() {
 		return mSp.getBoolean(SP_FILTER_TIME, false);
 	}

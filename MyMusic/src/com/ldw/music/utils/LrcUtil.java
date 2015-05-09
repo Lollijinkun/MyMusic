@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.utils;
 
 import java.io.UnsupportedEncodingException;
@@ -24,8 +21,7 @@ public class LrcUtil {
 				if (c <= 256) {
 					sb.append(Integer.toHexString(c).toUpperCase() + "00");
 				} else {
-					String s = URLEncoder.encode(c.toString(), "UTF-16LE")
-							.replace("%", "");
+					String s = URLEncoder.encode(c.toString(), "UTF-16LE").replace("%", "");
 					sb.append(s);
 				}
 			}
@@ -43,8 +39,7 @@ public class LrcUtil {
 				if (c <= 256) {
 					sb.append(Integer.toHexString(c).toUpperCase());
 				} else {
-					String s = URLEncoder.encode(c.toString(), "UTF-8")
-							.replace("%", "");
+					String s = URLEncoder.encode(c.toString(), "UTF-8").replace("%", "");
 					sb.append(s);
 				}
 			}
@@ -60,8 +55,7 @@ public class LrcUtil {
 		int length = qqHexStr.length() / 2;
 		int[] song = new int[length];
 		for (int i = 0; i < length; i++) {
-			song[i] = Integer
-					.parseInt(qqHexStr.substring(2 * i, 2 * i + 2), 16);
+			song[i] = Integer.parseInt(qqHexStr.substring(2 * i, 2 * i + 2), 16);
 		}
 		int t1, t2, t3;
 		t1 = t2 = t3 = 0;
@@ -119,7 +113,13 @@ public class LrcUtil {
 			r = r + 4294967296L;
 		return r;
 	}
-
+	
+	/**
+	 * 解析歌词获取歌词句子集合
+	 * @param line
+	 * @param music
+	 * @return
+	 */
 	public List<SentenceModel> parseLrc(String line, MusicInfo music) {
 		if (line.equals(""))
 			return null;

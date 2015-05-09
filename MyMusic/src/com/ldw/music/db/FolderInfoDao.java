@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.db;
 
 import java.util.ArrayList;
@@ -13,6 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.ldw.music.model.FolderInfo;
 
+/**
+ * 数据表FolderInfo操作类
+ * @author 慎之
+ *
+ */
 public class FolderInfoDao {
 
 	private static final String TABLE_FOLDER = "folder_info";
@@ -22,6 +24,10 @@ public class FolderInfoDao {
 		this.mContext = context;
 	}
 	
+	/**
+	 * 将FolderInfo集合中的数据存放进数据库
+	 * @param list
+	 */
 	public void saveFolderInfo(List<FolderInfo> list) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		for (FolderInfo info : list) {
@@ -32,6 +38,10 @@ public class FolderInfoDao {
 		}
 	}
 	
+	/**
+	 * 将数据表FolderInfo中的数据封装进FolderInfo集合中
+	 * @return
+	 */
 	public List<FolderInfo> getFolderInfo() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		List<FolderInfo> list = new ArrayList<FolderInfo>();
@@ -48,7 +58,7 @@ public class FolderInfoDao {
 	}
 	
 	/**
-	 * 数据库中是否有数据
+	 * 检查数据表FolderInfo中是否有数据
 	 * @return
 	 */
 	public boolean hasData() {
@@ -66,6 +76,10 @@ public class FolderInfoDao {
 		return has;
 	}
 	
+	/**
+	 * 获取FolderInfo表中的数据条数
+	 * @return
+	 */
 	public int getDataCount() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "select count(*) from " + TABLE_FOLDER;

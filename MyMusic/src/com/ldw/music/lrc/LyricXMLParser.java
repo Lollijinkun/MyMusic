@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.lrc;
 
 import java.io.InputStream;
@@ -17,7 +14,7 @@ import android.util.Log;
 
 /**
  * 歌词解析
- * @author longdw(longdawei1988@gmail.com)
+ * @author 慎之
  *
  */
 public class LyricXMLParser {
@@ -70,7 +67,14 @@ public class LyricXMLParser {
 			super.startElement(uri, localName, qName, attributes);
 			mStringBuilder.setLength(0); // 将字符长度设置为0 以便重新开始读取元素内的字符节点
 		}
-
+		
+		@Override
+		public void characters(char[] ch, int start, int length)
+				throws SAXException {
+			super.characters(ch, start, length);
+			mStringBuilder.append(ch, start, length); // 将读取的字符数组追加到builder中
+		}
+		
 		@Override
 		public void endElement(String uri, String localName, String qName)
 				throws SAXException {
@@ -85,11 +89,6 @@ public class LyricXMLParser {
 			}
 		}
 
-		@Override
-		public void characters(char[] ch, int start, int length)
-				throws SAXException {
-			super.characters(ch, start, length);
-			mStringBuilder.append(ch, start, length); // 将读取的字符数组追加到builder中
-		}
+		
 	}
 }

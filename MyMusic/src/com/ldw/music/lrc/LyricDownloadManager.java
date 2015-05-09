@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.lrc;
 
 import java.io.BufferedReader;
@@ -23,13 +20,12 @@ import android.util.Log;
 import com.ldw.music.MusicApp;
 
 /**
- * 歌词下载
- * @author longdw(longdawei1988@gmail.com)
+ * 歌词下载管理工具类
+ * @author 慎之
  *
  */
 public class LyricDownloadManager {
-	private static final String TAG = LyricDownloadManager.class
-			.getSimpleName();
+	private static final String TAG = LyricDownloadManager.class.getSimpleName();
 	public static final String GB2312 = "GB2312";
 	public static final String UTF_8 = "utf-8";
 	private final int mTimeOut = 10 * 1000;
@@ -58,9 +54,8 @@ public class LyricDownloadManager {
 		}
 
 		// 百度音乐盒的API
-		String strUrl = "http://box.zhangmen.baidu.com/x?op=12&count=1&title="
-				+ musicName + "$$" + singerName + "$$$$";
-
+		//String strUrl = "http://box.zhangmen.baidu.com/x?op=12&count=1&title=" + musicName + "$$" + singerName + "$$$$";
+		String strUrl = "http://mp3.baidu.com/dev/api/?tn=getinfo&ct=0&word="+ musicName +"$$"+singerName+"&ie=utf-8&format=xml";
 		// 生成URL
 		try {
 			mUrl = new URL(strUrl);
@@ -70,8 +65,7 @@ public class LyricDownloadManager {
 		}
 
 		try {
-			HttpURLConnection httpConn = (HttpURLConnection) mUrl
-					.openConnection();
+			HttpURLConnection httpConn = (HttpURLConnection) mUrl.openConnection();
 			httpConn.setReadTimeout(mTimeOut);
 			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				Log.i(TAG, "http连接失败");
@@ -81,8 +75,7 @@ public class LyricDownloadManager {
 			Log.i(TAG, "http连接成功");
 
 			// 将百度音乐盒的返回的输入流传递给自定义的XML解析器，解析出歌词的下载ID
-			mDownloadLyricId = mLyricXMLParser.parseLyricId(httpConn
-					.getInputStream());
+			mDownloadLyricId = mLyricXMLParser.parseLyricId(httpConn.getInputStream());
 			httpConn.disconnect();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -97,7 +90,8 @@ public class LyricDownloadManager {
 	}
 
 	/** 根据歌词下载ID，获取网络上的歌词文本内容 
-	 * @param musicInfo */
+	 * @param musicInfo 
+	 * */
 	private String fetchLyricContent(String musicName, String singerName, String oldMusicName) {
 		if (mDownloadLyricId == -1) {
 			Log.i(TAG, "未指定歌词下载ID");
@@ -119,8 +113,7 @@ public class LyricDownloadManager {
 		// 获取歌词文本，存在字符串类中
 		try {
 			// 建立网络连接
-			br = new BufferedReader(new InputStreamReader(mUrl.openStream(),
-					GB2312));
+			br = new BufferedReader(new InputStreamReader(mUrl.openStream(), GB2312));
 			if (br != null) {
 				content = new StringBuilder();
 				// 逐行获取歌词文本
@@ -153,8 +146,7 @@ public class LyricDownloadManager {
 			if (!savefolder.exists()) {
 				savefolder.mkdirs();
 			}
-			String savePath = folderPath + File.separator + oldMusicName
-					+ ".lrc";
+			String savePath = folderPath + File.separator + oldMusicName + ".lrc";
 //			String savePath = folderPath + File.separator + musicName + ".lrc";
 			Log.i(TAG, "歌词保存路径:" + savePath);
 

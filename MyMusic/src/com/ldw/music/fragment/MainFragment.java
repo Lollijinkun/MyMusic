@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.fragment;
 
 import android.content.BroadcastReceiver;
@@ -8,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -113,7 +111,12 @@ public class MainFragment extends Fragment implements IConstants,
 
 		return view;
 	}
-
+	
+	/**
+	 * MyCridViewAdapter 继承BaseAdapter适配器实现ListView的多行显示效果。
+	 * @author 慎之
+	 *
+	 */
 	private class MyGridViewAdapter extends BaseAdapter {
 
 		private int[] drawable = new int[] { R.drawable.icon_local_music,
@@ -137,7 +140,15 @@ public class MainFragment extends Fragment implements IConstants,
 		public long getItemId(int position) {
 			return position;
 		}
-
+		
+		/**
+		 * 设置参数的数值
+		 * @param music_num
+		 * @param artist_num
+		 * @param album_num
+		 * @param folder_num
+		 * @param favorite_num
+		 */
 		public void setNum(int music_num, int artist_num, int album_num,
 				int folder_num, int favorite_num) {
 			musicNum = music_num;
@@ -145,24 +156,26 @@ public class MainFragment extends Fragment implements IConstants,
 			albumNum = album_num;
 			folderNum = folder_num;
 			favoriteNum = favorite_num;
+			
+			//Notifies the attached observers that the underlying data has been changed and 
+			//any View reflecting the data set should refresh itself.(通知观察者数据已经改变，刷新界面数据)
 			notifyDataSetChanged();
 		}
-
+		
+		/**
+		 * 获取单个ListView的item
+		 */
 		@Override
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			
+			//在row第一次被构建出来的时候，调用findViewById, 通过Holder对象存储起来,然后把Holder对象通过row.setTag方法，直接缓存在row上。这样下次就不用在查找了。
 			ViewHolder holder;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = getActivity().getLayoutInflater().inflate(
-						R.layout.main_gridview_item, null);
-				holder.iv = (ImageView) convertView
-						.findViewById(R.id.gridview_item_iv);
-				holder.nameTv = (TextView) convertView
-						.findViewById(R.id.gridview_item_name);
-				holder.numTv = (TextView) convertView
-						.findViewById(R.id.gridview_item_num);
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.main_gridview_item, null);
+				holder.iv = (ImageView) convertView.findViewById(R.id.gridview_item_iv);
+				holder.nameTv = (TextView) convertView.findViewById(R.id.gridview_item_name);
+				holder.numTv = (TextView) convertView.findViewById(R.id.gridview_item_num);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -185,7 +198,10 @@ public class MainFragment extends Fragment implements IConstants,
 				holder.numTv.setText(albumNum + "");
 				break;
 			}
-
+			
+			/**
+			 * 设置点击事件的监听器
+			 */
 			convertView.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -208,6 +224,7 @@ public class MainFragment extends Fragment implements IConstants,
 						from = START_FROM_ALBUM;
 						break;
 					}
+					//根据不同的点击位置，传递设置参数
 					mUIManager.setContentType(from);
 				}
 			});
@@ -217,7 +234,11 @@ public class MainFragment extends Fragment implements IConstants,
 
 			return convertView;
 		}
-
+		
+		/**
+		 *  用ViewHolder对象关联ViewContent中存储的数据
+		 * @author 慎之
+		 */
 		private class ViewHolder {
 			ImageView iv;
 			TextView nameTv, numTv;
@@ -229,7 +250,10 @@ public class MainFragment extends Fragment implements IConstants,
 		// service绑定成功会执行到这里
 		refreshNum();
 	}
-
+	
+	/**
+	 * 从数据库中获取最新的数据，并显示加载到界面上
+	 */
 	public void refreshNum() {
 		int musicCount = mMusicDao.getDataCount();
 		int artistCount = mArtistDao.getDataCount();
@@ -240,19 +264,26 @@ public class MainFragment extends Fragment implements IConstants,
 		mAdapter.setNum(musicCount, artistCount, albumCount, folderCount, favoriteCount);
 	}
 	
+	/**
+	 * MusicPlayBroadcast 接收并响应播放音乐广播的类。
+	 * @author 慎之
+	 */
 	private class MusicPlayBroadcast extends BroadcastReceiver {
-
+		//BroadcastReceiver是对发送出来的 Broadcast进行过滤接受并响应的一类组件
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(BROADCAST_NAME)) {
 				MusicInfo music = new MusicInfo();
+				//未取到PLAY_STATE_NAME所带对应的值，则返回默认值MPS_NOFILE
 				int playState = intent.getIntExtra(PLAY_STATE_NAME, MPS_NOFILE);
 				int curPlayIndex = intent.getIntExtra(PLAY_MUSIC_INDEX, -1);
+				//获取该intent中所绑定的bundle值
 				Bundle bundle = intent.getBundleExtra(MusicInfo.KEY_MUSIC);
 				if (bundle != null) {
 					music = bundle.getParcelable(MusicInfo.KEY_MUSIC);
 				}
 				switch (playState) {
+				// 当前音乐文件无效
 				case MPS_INVALID:// 考虑后面加上如果文件不可播放直接跳到下一首
 					mMusicTimer.stopTimer();
 					mSdm.refreshUI(0, music.duration, music);
@@ -261,29 +292,27 @@ public class MainFragment extends Fragment implements IConstants,
 					mBottomUIManager.refreshUI(0, music.duration, music);
 					mBottomUIManager.showPlay(true);
 					break;
+				// 暂停
 				case MPS_PAUSE:
 					mMusicTimer.stopTimer();
-					mSdm.refreshUI(mServiceManager.position(), music.duration,
-							music);
+					mSdm.refreshUI(mServiceManager.position(), music.duration,music);
 					mSdm.showPlay(true);
-
-					mBottomUIManager.refreshUI(mServiceManager.position(), music.duration,
-							music);
+					
+					mBottomUIManager.refreshUI(mServiceManager.position(), music.duration,music);
 					mBottomUIManager.showPlay(true);
 
 					mServiceManager.cancelNotification();
 					break;
+				// 播放中
 				case MPS_PLAYING:
 					mMusicTimer.startTimer();
-					mSdm.refreshUI(mServiceManager.position(), music.duration,
-							music);
+					mSdm.refreshUI(mServiceManager.position(), music.duration,music);
 					mSdm.showPlay(false);
 
-					mBottomUIManager.refreshUI(mServiceManager.position(), music.duration,
-							music);
+					mBottomUIManager.refreshUI(mServiceManager.position(), music.duration,music);
 					mBottomUIManager.showPlay(false);
-
 					break;
+				// 准备就绪
 				case MPS_PREPARE:
 					mMusicTimer.stopTimer();
 					mSdm.refreshUI(0, music.duration, music);

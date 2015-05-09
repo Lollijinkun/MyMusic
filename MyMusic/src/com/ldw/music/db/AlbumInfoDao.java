@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.db;
 
 import java.util.ArrayList;
@@ -13,6 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.ldw.music.model.AlbumInfo;
 
+/**
+ * 歌曲专辑表的数据库操作类
+ * @author 慎之
+ *
+ */
 public class AlbumInfoDao {
 
 	private static final String TABLE_ALBUM = "album_info";
@@ -22,6 +24,10 @@ public class AlbumInfoDao {
 		this.mContext = context;
 	}
 	
+	/**
+	 * 将AlbumInfo集合中的信息存放到数据库
+	 * @param list
+	 */
 	public void saveAlbumInfo(List<AlbumInfo> list) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		for (AlbumInfo info : list) {
@@ -34,6 +40,10 @@ public class AlbumInfoDao {
 		}
 	}
 	
+	/**
+	 * 获取数据库中AubumInfo表的数据并封装进AlbumInfo集合
+	 * @return
+	 */
 	public List<AlbumInfo> getAlbumInfo() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		List<AlbumInfo> list = new ArrayList<AlbumInfo>();
@@ -52,7 +62,7 @@ public class AlbumInfoDao {
 	}
 	
 	/**
-	 * 数据库中是否有数据
+	 * 检查数据库中AlbumInfo表中是否有数据
 	 * @return
 	 */
 	public boolean hasData() {
@@ -70,6 +80,10 @@ public class AlbumInfoDao {
 		return has;
 	}
 	
+	/**
+	 * 获取数据库中AlbumInfo表中的数据条数
+	 * @return
+	 */
 	public int getDataCount() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "select count(*) from " + TABLE_ALBUM;

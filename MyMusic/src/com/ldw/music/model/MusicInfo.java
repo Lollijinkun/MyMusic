@@ -1,12 +1,14 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.model;
 
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * 歌曲对象
+ * @author 慎之
+ *
+ */
 public class MusicInfo implements Parcelable {
 	
 	public final static String KEY_MUSIC= "music";

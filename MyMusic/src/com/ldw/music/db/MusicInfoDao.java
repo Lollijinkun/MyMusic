@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.db;
 
 import java.util.ArrayList;
@@ -14,6 +11,11 @@ import android.database.sqlite.SQLiteDatabase;
 import com.ldw.music.activity.IConstants;
 import com.ldw.music.model.MusicInfo;
 
+/**
+ * MusicInfo表的数据库操作类
+ * @author 慎之
+ *
+ */
 public class MusicInfoDao implements IConstants {
 	
 	private static final String TABLE_MUSIC = "music_info";
@@ -23,9 +25,14 @@ public class MusicInfoDao implements IConstants {
 		this.mContext = context;
 	}
 	
+	/**
+	 * 将MusicInfo集合对象存入数据库中
+	 * @param list
+	 */
 	public void saveMusicInfo(List<MusicInfo> list) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		for (MusicInfo music : list) {
+			//contenvalues只能存储基本类型的数据
 			ContentValues cv = new ContentValues();
 			cv.put("songid", music.songId);
 			cv.put("albumid", music.albumId);
@@ -41,6 +48,10 @@ public class MusicInfoDao implements IConstants {
 		}
 	}
 	
+	/**
+	 * 获取数据库中的数据，并封装进MusicInfo集合
+	 * @return
+	 */
 	public List<MusicInfo> getMusicInfo() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "select * from " + TABLE_MUSIC;
@@ -48,6 +59,11 @@ public class MusicInfoDao implements IConstants {
 		return parseCursor(db.rawQuery(sql, null));
 	}
 	
+	/**
+	 * 读取游标对象，将游标对象中的值存放进MusicInfo集合
+	 * @param cursor
+	 * @return
+	 */
 	private List<MusicInfo> parseCursor(Cursor cursor) {
 		List<MusicInfo> list = new ArrayList<MusicInfo>();
 		while(cursor.moveToNext()) {
@@ -68,7 +84,13 @@ public class MusicInfoDao implements IConstants {
 		cursor.close();
 		return list;
 	}
-
+	
+	/**
+	 * 根据分类获取数据库中的音乐对象集合
+	 * @param selection 从外部传入的参数值
+	 * @param type 查找类型（歌手，专辑，文件夹）
+	 * @return
+	 */
 	public List<MusicInfo> getMusicInfoByType(String selection, int type) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "";
@@ -82,6 +104,11 @@ public class MusicInfoDao implements IConstants {
 		return parseCursor(db.rawQuery(sql, new String[]{ selection }));
 	}
 	
+	/**
+	 * 根据歌曲的ID设置其喜欢（收藏）属性（0，1）
+	 * @param id 歌曲的ID
+	 * @param favorite
+	 */
 	public void setFavoriteStateById(int id, int favorite) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "update " + TABLE_MUSIC + " set favorite = " + favorite + " where _id = " + id;
@@ -89,7 +116,7 @@ public class MusicInfoDao implements IConstants {
 	}
 	
 	/**
-	 * 数据库中是否有数据
+	 * 检查数据表MusicInfo中是否有数据
 	 * @return
 	 */
 	public boolean hasData() {
@@ -107,6 +134,10 @@ public class MusicInfoDao implements IConstants {
 		return has;
 	}
 	
+	/**
+	 * 获取数据表MusicInfo中数据条数
+	 * @return
+	 */
 	public int getDataCount() {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext);
 		String sql = "select count(*) from " + TABLE_MUSIC;

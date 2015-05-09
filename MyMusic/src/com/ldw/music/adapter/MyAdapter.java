@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.adapter;
 
 import java.util.ArrayList;
@@ -27,8 +24,14 @@ import com.ldw.music.uimanager.SlidingDrawerManager;
 import com.ldw.music.utils.MusicUtils;
 import com.ldw.music.utils.StringHelper;
 
+/**
+ * 对歌曲列表ListView进行管理，生成新的ListView的item
+ * @author 慎之
+ *
+ */
 public class MyAdapter extends BaseAdapter implements IConstants {
-
+	
+	// LayoutInflater 用来获取布局文件对象（自定义）
 	private LayoutInflater mLayoutInflater;
 	private ArrayList<MusicInfo> mMusicList;
 	private ServiceManager mServiceManager;
@@ -39,7 +42,11 @@ public class MyAdapter extends BaseAdapter implements IConstants {
 	private FavoriteInfoDao mFavoriteDao;
 	private MusicInfoDao mMusicDao;
 	private int mFrom;
-
+	
+	/**
+	 * 定义一个包含3个TextView，2个ImageView控件的ViewHolder类
+	 * @author 慎之
+	 */
 	class ViewHolder {
 		TextView musicNameTv, artistTv, durationTv;
 		ImageView playStateIconIv, favoriteIv;
@@ -54,14 +61,18 @@ public class MyAdapter extends BaseAdapter implements IConstants {
 		mMusicDao = new MusicInfoDao(context);
 	}
 	
+	/**
+	 * 用传入的list和form更新当前的页面数据
+	 * @param list
+	 * @param from
+	 */
 	public void setData(List<MusicInfo> list, int from) {
 		setData(list);
 		this.mFrom = from;
 	}
 
 	/**
-	 * 当数据库中有数据的时候会调用该方法来更新列表
-	 * 
+	 * 用传入的list更新当前页面中的歌曲列表，并按照文件名排序
 	 * @param list
 	 */
 	public void setData(List<MusicInfo> list) {
@@ -70,30 +81,44 @@ public class MyAdapter extends BaseAdapter implements IConstants {
 			mMusicList.addAll(list);
 			// 为list排序
 			Collections.sort(mMusicList, comparator);
+			//通知界面进行数据刷新
 			notifyDataSetChanged();
 		}
 	}
 	
+	/**
+	 * 刷新正在播放歌曲列表
+	 */
 	public void refreshPlayingList() {
 		if(mMusicList.size() > 0) {
 			mServiceManager.refreshMusicList(mMusicList);
 		}
 	}
 	
+	/**
+	 * 刷新列表中的歌曲的收藏状态
+	 * @param id
+	 * @param favorite
+	 */
 	public void refreshFavoriteById(int id, int favorite) {
 		int position = MusicUtils.seekPosInListById(mMusicList, id);
 		mMusicList.get(position).favorite = favorite;
 		notifyDataSetChanged();
 	}
-
+	
+	/**
+	 * 获取当前页面中的歌曲列表
+	 * @return
+	 */
 	public List<MusicInfo> getData() {
 		return mMusicList;
 	}
 
 	public void setQueryFinished(IQueryFinished finish) {
-//		mIQueryFinished = finish;
+		//		mIQueryFinished = finish;
 	}
-
+	
+	//根据文件名进行排序
 	Comparator<MusicInfo> comparator = new Comparator<MusicInfo>() {
 
 		char first_l, first_r;
@@ -117,7 +142,12 @@ public class MyAdapter extends BaseAdapter implements IConstants {
 			}
 		}
 	};
-
+	
+	/**
+	 * 设置当前播放的状态以及对于歌曲的ID
+	 * @param playState
+	 * @param playIndex
+	 */
 	public void setPlayState(int playState, int playIndex) {
 		mPlayState = playState;
 		mCurPlayMusicIndex = playIndex;
@@ -128,7 +158,10 @@ public class MyAdapter extends BaseAdapter implements IConstants {
 	public int getCount() {
 		return mMusicList.size();
 	}
-
+	
+	/**
+	 * 返回当前位置的MusicInfo对象
+	 */
 	@Override
 	public MusicInfo getItem(int position) {
 		return mMusicList.get(position);
@@ -144,37 +177,35 @@ public class MyAdapter extends BaseAdapter implements IConstants {
 		final ViewHolder viewHolder;
 		final MusicInfo music = getItem(position);
 		if (convertView == null) {
+			// 如果ConvertView对象为空，需要重新构造一个ConvertView对象并设置其相关属性
 			viewHolder = new ViewHolder();
-			convertView = mLayoutInflater
-					.inflate(R.layout.musiclist_item, null);
-			viewHolder.musicNameTv = (TextView) convertView
-					.findViewById(R.id.musicname_tv);
-			viewHolder.artistTv = (TextView) convertView
-					.findViewById(R.id.artist_tv);
-			viewHolder.durationTv = (TextView) convertView
-					.findViewById(R.id.duration_tv);
-			viewHolder.playStateIconIv = (ImageView) convertView
-					.findViewById(R.id.playstate_iv);
-			viewHolder.favoriteIv = (ImageView) convertView
-					.findViewById(R.id.favorite_iv);
+			convertView = mLayoutInflater.inflate(R.layout.musiclist_item, null);
+			viewHolder.musicNameTv = (TextView) convertView.findViewById(R.id.musicname_tv);
+			viewHolder.artistTv = (TextView) convertView.findViewById(R.id.artist_tv);
+			viewHolder.durationTv = (TextView) convertView.findViewById(R.id.duration_tv);
+			viewHolder.playStateIconIv = (ImageView) convertView.findViewById(R.id.playstate_iv);
+			viewHolder.favoriteIv = (ImageView) convertView.findViewById(R.id.favorite_iv);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-
+		
 		if (position != mCurPlayMusicIndex) {
+			// 如果不是当前播放的歌曲，移除播放状态的图标
 			viewHolder.playStateIconIv.setVisibility(View.GONE);
 		} else {
+			// 如果是当前播放的歌曲，根据播放状态添加播放或暂停图标
 			viewHolder.playStateIconIv.setVisibility(View.VISIBLE);
 			if (mPlayState == MPS_PAUSE) {
-				viewHolder.playStateIconIv
-						.setBackgroundResource(R.drawable.list_pause_state);
+				// 添加暂停图标
+				viewHolder.playStateIconIv.setBackgroundResource(R.drawable.list_pause_state);
 			} else {
-				viewHolder.playStateIconIv
-						.setBackgroundResource(R.drawable.list_play_state);
+				// 添加播放图标
+				viewHolder.playStateIconIv.setBackgroundResource(R.drawable.list_play_state);
 			}
 		}
 		
+		// 添加收藏按钮的点击监听事件
 		viewHolder.favoriteIv.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -209,8 +240,7 @@ public class MyAdapter extends BaseAdapter implements IConstants {
 
 		viewHolder.musicNameTv.setText((position + 1) + "." + music.musicName);
 		viewHolder.artistTv.setText(music.artist);
-		viewHolder.durationTv
-				.setText(MusicUtils.makeTimeString(music.duration));
+		viewHolder.durationTv.setText(MusicUtils.makeTimeString(music.duration));
 
 		return convertView;
 	}

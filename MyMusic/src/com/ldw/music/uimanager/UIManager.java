@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.uimanager;
 
 import java.io.IOException;
@@ -34,12 +31,15 @@ import com.ldw.music.storage.SPStorage;
 
 /**
  * 动态生成view并通过viewPager来显示
- * 
- * @author longdw
- * 
+ * @author 慎之
  */
 public class UIManager implements IConstants, OnBackListener {
 
+	/**
+	 * 刷新监听器
+	 * @author 慎之
+	 *
+	 */
 	public interface OnRefreshListener {
 		public void onRefresh();
 	}
@@ -136,7 +136,11 @@ public class UIManager implements IConstants, OnBackListener {
 	public void setOnRefreshListener(OnRefreshListener listener) {
 		mRefreshListener = listener;
 	}
-
+	
+	/**
+	 * 根据不同的点击位置设置加载不同的内容
+	 * type:START_FROM_LOCAL, START_FROM_FAVORITE, START_FROM_FOLDER, START_FROM_ARTIST, START_FROM_ALBUM
+	 */
 	public void setContentType(int type) {
 		// 此处可以根据传递过来的view和type分开来处理
 		setContentType(type, null);
@@ -149,7 +153,12 @@ public class UIManager implements IConstants, OnBackListener {
 			mViewPager.setCurrentItem(0, true);
 		}
 	}
-
+	
+	/**
+	 * 根据不同的点击位置，加载不同的内容界面
+	 * @param type
+	 * @param obj
+	 */
 	public void setContentType(int type, Object obj) {
 		// 注册监听返回按钮
 		mMainActivity.registerBackListener(this);

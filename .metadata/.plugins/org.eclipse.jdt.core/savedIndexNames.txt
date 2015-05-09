@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+D:\learn\Androiod\.metadata\.plugins\org.eclipse.jdt.core
+744542284.index
+2379037092.index
+745579449.index
+2766899971.index

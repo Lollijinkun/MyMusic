@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.lrc;
 
 import java.io.BufferedReader;
@@ -20,34 +17,31 @@ import android.util.Log;
 import com.ldw.music.model.LyricSentence;
 
 /**
- * 歌词的显示控制
- * @author longdw(longdawei1988@gmail.com)
+ * 本地歌词的加载显示控制类
+ * @author 慎之
  *
  */
 public class LyricLoadHelper {
-	/** 用于向外通知歌词载入、变化的监听器 */
+	
+	/** 
+	 * 用于向外通知歌词载入、变化的监听器 
+	 */
 	public interface LyricListener {
 
 		/**
 		 * 歌词载入时调用
-		 * 
-		 * @param lyricSentences
-		 *            歌词文本处理后的所有歌词句子
-		 * @param indexOfCurSentence
-		 *            正在播放的句子在句子集合中的索引号
+		 * @param lyricSentences 歌词文本处理后的所有歌词句子
+		 * @param indexOfCurSentence 正在播放的句子在句子集合中的索引号
 		 */
-		public abstract void onLyricLoaded(List<LyricSentence> lyricSentences,
-				int indexOfCurSentence);
+		public abstract void onLyricLoaded(List<LyricSentence> lyricSentences, int indexOfCurSentence);
 
 		/**
-		 * 歌词变化时调用
-		 * 
-		 * @param indexOfCurSentence
-		 *            正在播放的句子在句子集合中的索引号
-		 * @param currentTime
-		 *            已经播放的毫秒数
-		 * */
+		 * 歌词变化时调用 
+		 * @param indexOfCurSentence  正在播放的句子在句子集合中的索引号
+		 * @param currentTime 已经播放的毫秒数
+		 */
 		public abstract void onLyricSentenceChanged(int indexOfCurSentence);
+		
 	}
 
 	private static final String TAG = LyricLoadHelper.class.getSimpleName();
@@ -63,34 +57,47 @@ public class LyricLoadHelper {
 	private int mIndexOfCurrentSentence = -1;
 
 	/** 用于缓存的一个正则表达式对象,识别[]中的内容，不包括中括号 */
-	private final Pattern mBracketPattern = Pattern
-			.compile("(?<=\\[).*?(?=\\])");
-	private final Pattern mTimePattern = Pattern
-			.compile("(?<=\\[)(\\d{2}:\\d{2}\\.?\\d{0,3})(?=\\])");
+	private final Pattern mBracketPattern = Pattern.compile("(?<=\\[).*?(?=\\])");
+	private final Pattern mTimePattern = Pattern.compile("(?<=\\[)(\\d{2}:\\d{2}\\.?\\d{0,3})(?=\\])");
 
-	private final String mEncoding = "utf-8";
-
+	//private final String mEncoding = "utf-8";
+	private final String mEncoding = "gb2312";
+	
+	/**
+	 * 获取句子集合
+	 * @return
+	 */
 	public List<LyricSentence> getLyricSentences() {
 		return mLyricSentences;
 	}
-
+	
+	/**
+	 * 设置句子集合
+	 * @param listener
+	 */
 	public void setLyricListener(LyricListener listener) {
 		this.mLyricListener = listener;
 	}
-
+	
+	/**
+	 * 设置当前正在播放的歌词句子的在句子集合中的索引号
+	 * @param index
+	 */
 	public void setIndexOfCurrentSentence(int index) {
 		mIndexOfCurrentSentence = index;
 	}
-
+	
+	/**
+	 * 获取当前正在播放的歌词句子的在句子集合中的索引号
+	 * @return
+	 */
 	public int getIndexOfCurrentSentence() {
 		return mIndexOfCurrentSentence;
 	}
 
 	/**
 	 * 根据歌词文件的路径，读取出歌词文本并解析
-	 * 
-	 * @param lyricPath
-	 *            歌词文件路径
+	 * @param lyricPath 歌词文件路径
 	 * @return true表示存在歌词，false表示不存在歌词
 	 */
 	public boolean loadLyric(String lyricPath) {
@@ -117,16 +124,12 @@ public class LyricLoadHelper {
 					}
 
 					// 按时间排序句子集合
-					Collections.sort(mLyricSentences,
-							new Comparator<LyricSentence>() {
+					Collections.sort(mLyricSentences, new Comparator<LyricSentence>() {
 								// 内嵌，匿名的compare类
-								public int compare(LyricSentence object1,
-										LyricSentence object2) {
-									if (object1.getStartTime() > object2
-											.getStartTime()) {
+								public int compare(LyricSentence object1, LyricSentence object2) {
+									if (object1.getStartTime() > object2.getStartTime()) {
 										return 1;
-									} else if (object1.getStartTime() < object2
-											.getStartTime()) {
+									} else if (object1.getStartTime() < object2.getStartTime()) {
 										return -1;
 									} else {
 										return 0;
@@ -135,11 +138,9 @@ public class LyricLoadHelper {
 							});
 
 					for (int i = 0; i < mLyricSentences.size() - 1; i++) {
-						mLyricSentences.get(i).setDuringTime(
-								mLyricSentences.get(i + 1).getStartTime());
+						mLyricSentences.get(i).setDuringTime(mLyricSentences.get(i + 1).getStartTime());
 					}
-					mLyricSentences.get(mLyricSentences.size() - 1)
-							.setDuringTime(Integer.MAX_VALUE);
+					mLyricSentences.get(mLyricSentences.size() - 1).setDuringTime(Integer.MAX_VALUE);
 					fr.close();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -151,12 +152,10 @@ public class LyricLoadHelper {
 		}
 		// 如果有谁在监听，通知它歌词载入完啦，并把载入的句子集合也传递过去
 		if (mLyricListener != null) {
-			mLyricListener.onLyricLoaded(mLyricSentences,
-					mIndexOfCurrentSentence);
+			mLyricListener.onLyricLoaded(mLyricSentences, mIndexOfCurrentSentence);
 		}
 		if (mHasLyric) {
-			Log.i(TAG, "Lyric file existed.Lyric has " + mLyricSentences.size()
-					+ " Sentences");
+			Log.i(TAG, "Lyric file existed.Lyric has " + mLyricSentences.size() + " Sentences");
 		} else {
 			Log.i(TAG, "Lyric file does not existed");
 		}
@@ -165,9 +164,7 @@ public class LyricLoadHelper {
 
 	/**
 	 * 根据传递过来的已播放的毫秒数，计算应当对应到句子集合中的哪一句，再通知监听者播放到的位置。
-	 * 
-	 * @param millisecond
-	 *            已播放的毫秒数
+	 * @param millisecond  已播放的毫秒数
 	 */
 	public void notifyTime(long millisecond) {
 		// Log.i(TAG, "notifyTime");
@@ -182,7 +179,12 @@ public class LyricLoadHelper {
 			}
 		}
 	}
-
+	
+	/**
+	 * 根据时间确定句子的编号
+	 * @param millisecond
+	 * @return
+	 */
 	private int seekSentenceIndex(long millisecond) {
 		int findStart = 0;
 		if (mIndexOfCurrentSentence >= 0) {

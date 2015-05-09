@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.activity;
 
 import java.util.ArrayList;
@@ -41,7 +38,7 @@ import com.ldw.music.utils.SplashScreen;
 /**
  * 主类，首次进入应用会到这里
  * 该类提供了首页MainFragment的显示和侧滑MenuFragment的显示
- * @author longdw(longdawei1988@gmail.com)
+ * @author 慎之
  *
  */
 @SuppressLint("HandlerLeak")
@@ -72,18 +69,26 @@ public class MainContentActivity extends FragmentActivity implements IConstants 
 		initSDCard();
 		
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(ALARM_CLOCK_BROADCAST);
+		// 添加alarm_clock_broadcast状态
+		filter.addAction(ALARM_CLOCK_BROADCAST);	
 		registerReceiver(mAlarmReceiver, filter);
-
+		
+		//将View加载到根view之上，这样当显示view时，先显示根view，然后再显示子view，以此类推，最终将所有view显示出来。
 		setContentView(R.layout.frame_main);
 		mSplashScreen = new SplashScreen(this);
+		
+		//程序启动界面加载起始图片
 		mSplashScreen.show(R.drawable.image_splash_background,
 				SplashScreen.SLIDE_LEFT);
+		
 		// set the Above View
+		// 设置主界面
 		mMainFragment = new MainFragment();
+		// 用主界面替换程序起始动画界面
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.frame_main, mMainFragment).commit();
 
+		
 		// configure the SlidingMenu
 		mSlidingMenu = new SlidingMenu(this);
 		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
@@ -109,15 +114,17 @@ public class MainContentActivity extends FragmentActivity implements IConstants 
 
 		getData();
 	}
-
+	
+	/**
+	 * 初始化SDCard
+	 */
 	private void initSDCard() {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.setPriority(1000);// 设置最高优先级
 		intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);// sd卡被插入，且已经挂载
 		intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);// sd卡存在，但还没有挂载
 		intentFilter.addAction(Intent.ACTION_MEDIA_REMOVED);// sd卡被移除
-		intentFilter.addAction(Intent.ACTION_MEDIA_SHARED);// sd卡作为
-															// USB大容量存储被共享，挂载被解除
+		intentFilter.addAction(Intent.ACTION_MEDIA_SHARED);// sd卡作为USB大容量存储被共享，挂载被解除
 		intentFilter.addAction(Intent.ACTION_MEDIA_BAD_REMOVAL);// sd卡已经从sd卡插槽拔出，但是挂载点还没解除
 		// intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);// 开始扫描
 		// intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);// 扫描完成

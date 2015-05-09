@@ -1,6 +1,3 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.utils;
 
 import java.util.Timer;
@@ -11,7 +8,7 @@ import android.os.Message;
 
 /**
  * 一个定时器，控制歌曲播放进度
- * @author longdw(longdawei1988@gmail.com)
+ * @author 慎之
  *
  */
 public class MusicTimer {
@@ -19,6 +16,9 @@ public class MusicTimer {
 	public final static int REFRESH_PROGRESS_EVENT = 0x100;
 	
 	private static final int INTERVAL_TIME = 1000;
+	/**
+	 * Handler 接受子线程发送的数据, 并用此数据配合主线程更新UI. 
+	 */
 	private Handler[] mHandler;
 	private Timer mTimer;
 	private TimerTask mTimerTask;
@@ -33,15 +33,25 @@ public class MusicTimer {
 		mTimer = new Timer();
 	}
 	
+	/**
+	 * 启动计时器
+	 */
 	public void startTimer() {
 		if (mHandler == null || mTimerStart) {
 			return;
 		}
 		mTimerTask = new MyTimerTask();
+		/**
+		 * 第一个INTERVAL_TIME表示用户调用 schedule() 方法后，要等待这么长的时间才可以第一次执行run() 方法
+		 * 第二个INTERVAL_TIME第一次调用之后，从第二次开始每隔多长的时间调用一次 run()方法
+		 */
 		mTimer.schedule(mTimerTask, INTERVAL_TIME, INTERVAL_TIME);
 		mTimerStart = true;
 	}
-
+	
+	/**
+	 * 停止计时器
+	 */
 	public void stopTimer() {
 		if (!mTimerStart) {
 			return;
@@ -53,6 +63,11 @@ public class MusicTimer {
 		}
 	}
 	
+	/**
+	 * 定时器任务
+	 * @author 慎之
+	 *
+	 */
 	class MyTimerTask extends TimerTask {
 
 		@Override

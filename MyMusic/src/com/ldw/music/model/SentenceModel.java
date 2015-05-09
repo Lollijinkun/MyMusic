@@ -1,10 +1,12 @@
-/**
- * Copyright (c) www.longdw.com
- */
 package com.ldw.music.model;
 
 import java.io.Serializable;
 
+/**
+ * 歌词句子对象
+ * @author 慎之
+ *
+ */
 public class SentenceModel implements Serializable {
 	private static final long serialVersionUID = 20071125L;
 	private long fromTime;// 这句的起始时间,时间是以毫秒为单位
